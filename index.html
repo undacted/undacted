@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNDACTED</title>
+    <link rel="stylesheet" href="styles.css?v=31">
+    <!-- Google Fonts: Inter or similar for brutalist look. Outfit is also fine but let's stick to what we have or add Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <!-- SheetJS for Excel parsing -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <!-- Preloaded Data -->
+    <script src="data.js"></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo-container">
+                <span class="logo-box">UN</span><span class="logo-text">DACTED</span>
+            </div>
+            <!-- Discreet Data Controls -->
+            <div class="data-controls">
+                <button id="view-toggle" class="icon-btn" title="Toggle View (Mobile/Desktop)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="separator-v"></div>
+                <input type="file" id="excel-upload" accept=".xlsx,.csv" class="hidden">
+                <button id="data-btn" class="icon-btn" title="Load Excel Data">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </button>
+
+                <!-- API Key Input trigger -->
+                <button id="settings-btn" class="icon-btn" title="Settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <!-- Stage: The visual area -->
+            <div class="stage-container">
+                <!-- Step 0: Upload State -->
+                <div id="upload-stage" class="stage-content active">
+                    <div class="upload-box" id="drop-zone">
+                        <div class="upload-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <h3>UPLOAD DOCUMENT</h3>
+                        <p>Drag & Drop or Click to Select</p>
+                        <input type="file" id="image-upload" accept="image/*,application/pdf" class="hidden">
+                    </div>
+                </div>
+
+                <!-- Step 1-5: Canvas State -->
+                <div id="canvas-stage" class="stage-content">
+                    <div class="canvas-wrapper">
+                        <canvas id="main-canvas"></canvas>
+                        <!-- Overlays -->
+                        <div id="selection-overlay" class="overlay-layer"></div>
+                        <div id="calibration-text" class="overlay-text">Calibration Text</div>
+                        <div id="match-overlay" class="overlay-match"></div>
+                    </div>
+                </div>
+
+                <!-- Info Panels (Floating or below canvas) -->
+                <div id="info-panel-container" class="info-panel-container">
+                    <!-- Dynamic content based on step -->
+                    <div id="step-info" class="brutalist-card hidden">
+                        <h4 id="info-title">INFO</h4>
+                        <div id="info-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Stack -->
+            <div class="controls-stack">
+                <button id="back-btn" class="secondary-step-btn" style="margin-bottom: 0.5rem; display: none;">
+                    &#8592; BACK
+                </button>
+
+                <!-- Initial State -->
+                <button class="step-btn active" id="btn-step-0" data-step="0">
+                    <span class="step-label">BEGIN</span>
+                    <span class="step-name">UPLOAD DOCUMENT</span>
+                </button>
+
+                <!-- Step 1 -->
+                <button class="step-btn disabled" id="btn-step-1" data-step="1">
+                    <span class="step-label">STEP 1</span>
+                    <span class="step-name">SELECT REDACTION</span>
+                </button>
+
+                <!-- Step 2 -->
+                <button class="step-btn disabled" id="btn-step-2" data-step="2">
+                    <span class="step-label">STEP 2</span>
+                    <span class="step-name">CONFIRM SELECTION</span>
+                </button>
+
+                <!-- Step 3 -->
+                <button class="step-btn disabled" id="btn-step-3" data-step="3">
+                    <span class="step-label">STEP 3</span>
+                    <span class="step-name">AI FONT ANALYSIS</span>
+                </button>
+
+                <!-- Step 4 -->
+                <button class="step-btn disabled" id="btn-step-4" data-step="4">
+                    <span class="step-label">STEP 4</span>
+                    <span class="step-name">FONT CALIBRATION</span>
+                </button>
+
+                <!-- Step 4.5: Calibration Controls (Hidden until needed) -->
+                <div id="calibration-controls" class="sub-controls hidden">
+                    <div class="control-row">
+                        <input type="text" id="calib-text-input" placeholder="Calibration Text"
+                            value="jeevacation@gmail.com">
+                    </div>
+                    <div class="control-row">
+                        <input type="number" id="font-size" value="16" min="8" max="72" step="0.1">
+                        <select id="font-family">
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Inter">Inter</option>
+                        </select>
+                        <button class="mini-btn" id="font-bold-btn">B</button>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <button class="step-btn disabled" id="btn-step-5" data-step="5">
+                    <span class="step-label">STEP 5</span>
+                    <span class="step-name">ANALYZE</span>
+                </button>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Results Area (Fixed overlay at body level) -->
+    <div id="results-area" class="results-area hidden">
+        <!-- Header with back and target info -->
+        <div class="results-header">
+            <button class="back-btn" id="results-back-btn">← BACK</button>
+            <div class="target-box-info">
+                <span class="label-highlight">TARGET BOX</span>
+                <div class="info-field">
+                    <label>Width</label>
+                    <input type="number" id="target-width" readonly>
+                </div>
+                <div class="info-field">
+                    <label>Height</label>
+                    <input type="number" id="target-height" readonly>
+                </div>
+                <div class="info-field">
+                    <label>Tolerance</label>
+                    <input type="number" id="tolerance" value="10" min="1" max="50">
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Content (Dashboard) -->
+        <div class="results-panels">
+            <!-- Left: Match Candidates -->
+            <div class="panel matches-panel">
+                <h4>MATCH CANDIDATES FOUND</h4>
+                <div id="matches-list" class="matches-list">
+                    <!-- Matches will be populated here -->
+                </div>
+            </div>
+
+            <!-- Right: Reconstruction Preview -->
+            <div class="panel transpose-panel">
+                <h4>LIVE RECONSTRUCTION</h4>
+                <div id="transpose-preview" class="transpose-preview">
+                    <!-- Preview canvas will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="results-footer">
+            <button class="footer-btn">DISCLAIMER</button>
+            <button class="footer-btn" id="save-result-btn">SAVE RESULT (PNG)</button>
+            <button class="footer-btn" id="share-result-btn">SHARE RESULT</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content brutalist-card">
+            <h3>SETTINGS</h3>
+            <div class="input-group">
+                <label>GEMINI API KEY</label>
+                <input type="password" id="api-key" placeholder="Enter API Key">
+            </div>
+            <div class="modal-actions">
+                <button id="close-settings" class="action-btn">DONE</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=30"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,517 @@
+/* ============================================================ */
+/* UNDACTED - PRECISION DASHBOARD THEME                         */
+/* ============================================================ */
+
+:root {
+    --bg-main: #09090b;
+    --bg-card: #18181b;
+    --bg-hover: #27272a;
+    --border: #27272a;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --accent: #bef264;
+    /* The signature lime */
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* ============================================================ */
+/* WORKSPACE (STEP-BY-STEP FLOW)                                */
+/* ============================================================ */
+
+.app-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+body.results-active .app-container {
+    display: none !important;
+}
+
+/* Header */
+.main-header {
+    height: 64px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    flex-shrink: 0;
+}
+
+.logo-container {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    display: flex;
+    align-items: center;
+}
+
+.logo-box {
+    background: #fff;
+    color: #000;
+    padding: 0 0.3rem;
+    margin-right: 2px;
+}
+
+/* Workspace Layout */
+.workspace {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.stage-container {
+    flex: 1;
+    background: #000;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.controls-stack {
+    width: 400px;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+}
+
+/* Stage Content */
+.stage-content {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.stage-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Center the upload stage specifically */
+#upload-stage.active {
+    align-items: center;
+    justify-content: center;
+}
+
+.canvas-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+canvas {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.upload-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 2px dashed var(--border);
+    padding: 3rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.upload-box:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--text-secondary);
+}
+
+.upload-icon {
+    margin-bottom: 1rem;
+    color: var(--accent);
+}
+
+.upload-box h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.upload-box p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Data Controls (Top Right Icons) */
+.data-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    /* White icons */
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+}
+
+/* Separator between icons if needed */
+.separator-v {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+}
+
+/* Buttons */
+.step-btn {
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 1rem;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.step-btn.active {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+}
+
+.step-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* ============================================================ */
+/* RESULTS AREA (FULL SCREEN DASHBOARD)                         */
+/* ============================================================ */
+
+.results-area {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg-main);
+    z-index: 99999;
+    grid-template-rows: 64px 1fr 72px;
+}
+
+body.results-active .results-area {
+    display: grid !important;
+}
+
+/* 1. Header */
+.results-header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    gap: 2rem;
+}
+
+.back-btn {
+    background: var(--bg-hover);
+    color: #fff;
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.target-box-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.label-highlight {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.info-field {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.info-field input {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: #fff;
+    width: 60px;
+    text-align: center;
+    padding: 0.25rem;
+    border-radius: 4px;
+}
+
+/* 2. Main Content */
+.results-panels {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 0;
+    overflow: hidden;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+}
+
+.panel h4 {
+    padding: 1rem 1.5rem;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+}
+
+/* Match List */
+.matches-list {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--bg-main);
+}
+
+.match-item {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+
+.match-item:hover {
+    background: var(--bg-card);
+}
+
+.match-item.selected {
+    background: rgba(190, 242, 100, 0.1);
+    border-left: 4px solid var(--accent);
+    color: var(--accent);
+}
+
+/* Preview */
+.transpose-preview {
+    flex: 1;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.transpose-preview canvas {
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+}
+
+/* 3. Footer */
+.results-footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 0 1.5rem;
+}
+
+.footer-btn {
+    background: var(--text-primary);
+    color: #000;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.footer-btn#share-result-btn {
+    background: transparent;
+    color: #fff;
+    border: 1px solid var(--border);
+}
+
+.footer-btn:hover {
+    background: #fff;
+    transform: translateY(-1px);
+}
+
+/* Utility */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+}
+
+.modal-content h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.input-group input {
+    width: 100%;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+
+/* Canvas overlays */
+.overlay-text {
+    position: absolute;
+    color: red;
+    border: 2px dashed red;
+    padding: 2px;
+    background: rgba(255, 255, 255, 0.5);
+    white-space: pre;
+    cursor: move;
+    user-select: none;
+    display: none;
+    resize: both;
+    overflow: hidden;
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.overlay-layer,
+.overlay-match {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.action-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.85rem;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 1000px) {
+    .results-panels {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .panel {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+}
